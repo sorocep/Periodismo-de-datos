@@ -43,6 +43,15 @@ Comprobamos que variables tiene datos perdidos
 ```{r}
 sapply(madrid,function(x) sum(is.na(x)))
 ```
+
+Eliminamos los espacios en blanco existentes en la variable
+
+```{r}
+madrid$NombreDistrito<-gsub(" ","",madrid$NombreDistrito)
+summary(madrid$NombreDistrito)
+```
+
+
 Comenzamos con los primeros estudios
 
 ```{r}
@@ -177,7 +186,7 @@ ggplot(data=madridcv)+
                        position ="jitter", alpha =9/10, size=3)+
                       labs(y="valor", x ="variables")
 ```
-Correlacion del número de puntos limpios, número de aparcabis y número de puntos de recargas eléctricos con el número de poblacion respectivamente. 
+Correlacion del número de puntos limpios, número de aparcabicis, número de puntos de recargas eléctricos, centro de salud, superficie construida con el número de poblacion respectivamente. 
 
 ```{r}
 pairs (~NumeroPuntosLimpios+Poblacion, data=madrid)
@@ -194,7 +203,11 @@ pairs (~NumeroPuntosRecargas+Poblacion,data=madrid)
 ```
 
 
+```{r}
+pairs (~NumeroCentroSanitarios+Poblacion,data=madrid)
+```
 
-
-
+```{r}
+pairs (~SuperficieConstruida+Poblacion,data=madrid)
+```
 
