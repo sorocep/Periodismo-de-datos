@@ -1,0 +1,200 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load_libraries, include=FALSE}
+library(knitr)
+
+```
+
+```{r}
+library(ggplot2)
+library( reshape )
+```
+Exploración y Correlaciones
+
+```{r read}
+madrid<-read.csv2("PEC3HiloArgumental.csv",sep=";",dec=",",na.strings = "NA")
+#Mostramos las primeras filas
+head(madrid) 
+```
+
+Observamos el tipo de variable que R ha asignado, es habitual que no asigne el adecuado.
+
+```{r}
+sapply(madrid, class)
+```
+
+La variable CodigoDistrito debe ser cualitativa.
+
+```{r}
+madrid$Coddistri=as.factor(madrid$CodigoDistrito)
+```
+
+Comprobamos que variables tiene datos perdidos
+
+```{r}
+sapply(madrid,function(x) sum(is.na(x)))
+```
+Comenzamos con los primeros estudios
+
+```{r}
+datos = data.frame(madrid$NumeroBarrios,madrid$SuperficieDistrito,madrid$ConsumoAgua,
+                   madrid$Natalidad,madrid$Mortalidad,madrid$IndicePoblacionActiva,
+                   madrid$Poblacion,madrid$NumeroCentroSanitarios,madrid$NumeroAparcabicis,
+                   madrid$NumeroPuntosLimpios,madrid$NumeroPuntosRecargas,madrid$NumeroInmuebles,
+                   madrid$SuperficieConstruida,madrid$HectareasVerdes)
+summary(datos)
+```
+
+```{r}
+#Numero de barrios que forman parte de los distritos
+ggplot(data=madrid)+
+    geom_bar(stat='identity', aes(x=reorder(CodigoDistrito,NumeroBarrios), 
+                                  y = NumeroBarrios, fill=NumeroBarrios)) +
+    labs(x="Distrito", y = "Numero de Barrios")
+    labs(title = "Numero de barrios por distrito")
+```
+
+```{r}
+#Consumo de agua por Distrito
+ggplot(data=madrid)+
+    geom_bar(stat='identity', aes(x=reorder(CodigoDistrito,ConsumoAgua), 
+                                  y = ConsumoAgua, fill=ConsumoAgua)) +
+    labs(x="Distrito", y = "Consumo de Agua")
+    labs(title = "Consumo de Agua por Distrito")
+```
+
+
+```{r}
+#Superficie por Distrito
+ggplot(data=madrid)+
+    geom_bar(stat='identity', aes(x=reorder(CodigoDistrito,SuperficieDistrito), 
+                                  y = SuperficieDistrito, fill=SuperficieDistrito)) +
+    labs(x="Distrito", y = "Superficie")
+    labs(title = "Superficie por distrito")
+```
+
+
+```{r}
+#Natalidad por Distritos
+ggplot(data=madrid)+
+    geom_bar(stat='identity', aes(x=reorder(CodigoDistrito,Natalidad), 
+                                  y = Natalidad, fill=Natalidad)) +
+    labs(x="Distrito", y = "Natalidad")
+    labs(title = "Natalidad por distrito")
+```
+
+```{r}
+#Mortalidad por distritos
+ggplot(data=madrid)+
+    geom_bar(stat='identity', aes(x=reorder(CodigoDistrito,Mortalidad), 
+                                  y = Mortalidad, fill=Mortalidad)) +
+    labs(x="Distrito", y = "Mortalidad")
+    labs(title = "Mortalidad por distrito")
+```
+
+```{r}
+#Indice de población activa por distritos
+ggplot(data=madrid)+
+    geom_bar(stat='identity', aes(x=reorder(CodigoDistrito,IndicePoblacionActiva), 
+                                  y = IndicePoblacionActiva,   fill=IndicePoblacionActiva)) +
+    labs(x="Distrito", y = "Indice Poblacion Activa")
+    labs(title = "Indice de Poblacion Activa por distrito")
+```
+
+
+```{r}
+#Poblacion por distritos
+ggplot(data=madrid)+
+    geom_bar(stat='identity', aes(x=reorder(CodigoDistrito,Poblacion), 
+                                  y = Poblacion, fill=Poblacion)) +
+    labs(x="Distrito", y = "Poblacion")
+    labs(title = "Poblacion por distrito")
+```
+
+```{r}
+#Numero de Centros de Salud por distritos
+ggplot(data=madrid)+
+    geom_bar(stat='identity', aes(x=reorder(CodigoDistrito,NumeroCentroSanitarios), 
+                                  y = NumeroCentroSanitarios, fill=NumeroCentroSanitarios)) +
+    labs(x="Distrito", y = "Centros de Salud")
+    labs(title = "Centros de Salud por distrito")
+```
+
+
+
+```{r}
+#Numero de aparcabicis por distritos
+ggplot(data=madrid)+
+    geom_bar(stat='identity', aes(x=reorder(CodigoDistrito,NumeroAparcabicis), 
+                                  y = NumeroAparcabicis, fill=NumeroAparcabicis)) + labs(x="Distrito", y = "Numero de Aparcabis")
+  labs(title = "Numero de aparcabicis por distrito")
+```
+
+```{r}
+#Numero de puntos limpios de proximidad que forman parte de los distritos
+ggplot(data=madrid)+
+    geom_bar(stat='identity', aes(x=reorder(CodigoDistrito,NumeroPuntosLimpios), 
+                                  y = NumeroPuntosLimpios, fill=NumeroPuntosLimpios)) +
+    labs(x="Distrito", y = "Numero de Puntos Limpios de Proximidad")
+    labs(title = "Numero de Puntos Limpios de Proximidad por distrito")
+```
+
+
+
+```{r}
+#Numero de puntos de recargas electricas que forman parte de los distritos
+ggplot(data=madrid)+
+    geom_bar(stat='identity', aes(x=reorder(CodigoDistrito,NumeroPuntosRecargas), 
+                                  y = NumeroPuntosRecargas, fill=NumeroPuntosRecargas)) +
+    labs(x="Distrito", y = "Numero de Puntos de Recargas Electricas")
+    labs(title = "Numero de Puntos de Recargas Electricas por distrito")
+```
+Visualización de las variables Superficie, Superficie Construida y Hectareas Verdes según los distritos
+
+```{r}
+#Convertimos los datos a columna
+madridc<-madrid
+madridc=data.frame(madridc$NombreDistrito,madridc$CodigoDistrito,madridc$SuperficieDistrito,
+                   madridc$SuperficieConstruida,madridc$HectareasVerdes)
+colnames(madridc)=c("Distrito","CodDistrito","Superficie","SuperficieConst","HectareasVerdes")
+colnames(madridc)
+madridcv<-melt(madridc,id=c("Distrito","CodDistrito"))
+```
+
+
+```{r}
+ggplot(data=madridcv)+
+  geom_point(mapping = aes(x=variable, y = value, colour=Distrito),
+                       position ="jitter", alpha =9/10, size=3)+
+                      labs(y="valor", x ="variables")
+```
+Correlacion del número de puntos limpios, número de aparcabis y número de puntos de recargas eléctricos con el número de poblacion respectivamente. 
+
+```{r}
+pairs (~NumeroPuntosLimpios+Poblacion, data=madrid)
+```
+
+
+
+```{r}
+pairs (~NumeroAparcabicis+Poblacion,data=madrid)
+```
+
+```{r}
+pairs (~NumeroPuntosRecargas+Poblacion,data=madrid)
+```
+
+
+
+
+
+
